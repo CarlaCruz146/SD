@@ -40,6 +40,23 @@ public class ClienteReader implements Runnable{
                 menu.setOp(0);
                 menu.showMenu();
                 break;
+            case "PEDIDO":
+                menu.setOp(2);
+                menu.showMenu();
+                break;
+            case "PEDIDOCANCELADO":
+                menu.setOp(1);
+                menu.showMenu();
+                break;
+            case "IDENTIFICADOR":
+                System.out.println(comando);
+                menu.setOp(1);
+                menu.showMenu();
+                break;
+            case "RESERVACANCELADA":
+                menu.setOp(1);
+                menu.showMenu();
+                break;
             default:
                 System.out.println(comando);
                 menu.showMenu();

@@ -19,7 +19,15 @@ public class Menu {
                     "***********************************\n");
             break;
             case 1: System.out.println("************* MENU ****************\n"+
-                    "* 0 - Terminar Sessao                        *\n"+
+                    "* 1 - Reservar servidor a pedido    *\n"+
+                    "* 2 - Cancelar servidor a pedido    *\n"+
+                    "* 0 - Terminar Sessao               *\n"+
+                    "***********************************\n");
+            break;
+            case 2: System.out.println("********* MENU RESERVA *************\n"+
+                    "* 1 - Pequeno                     *\n"+
+                    "* 2 - Grande                      *\n"+
+                    "* 0 - Cancelar                    *\n"+
                     "***********************************\n");
             break;
         }System.out.println("Escolha uma opção");

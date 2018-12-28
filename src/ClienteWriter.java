@@ -42,9 +42,22 @@ public class ClienteWriter implements Runnable{
                     System.exit(0);
                 break;
             case 1:
+                if(op == 1)
+                    pedirServidor();
+                if(op == 2){
+                    cancelarServidor();
+                }
                 if(op == 0)
                     terminarSessao();
                break;
+            case 2:
+                if (op == 1)
+                    pedirPequeno();
+                if(op == 2)
+                    pedirGrande();
+                if(op == 0)
+                    cancelarPedido();
+                break;
         }
     }
 
@@ -66,10 +79,41 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
-    private void terminarSessao() throws IOException{
+    private void terminarSessao() throws IOException {
         out.write("TERMINARSESSAO");
         out.newLine();
         out.flush();
+    }
 
+    private void pedirServidor() throws IOException {
+        out.write("PEDIR");
+        out.newLine();
+        out.flush();
+    }
+
+    private void cancelarPedido() throws IOException {
+        out.write("CANCELARPEDIDO");
+        out.newLine();
+        out.flush();
+    }
+
+    private void pedirPequeno() throws IOException {
+        out.write("PEDIRPEQUENO");
+        out.newLine();
+        out.flush();
+    }
+
+    private void pedirGrande() throws IOException {
+        out.write("PEDIRGRANDE");
+        out.newLine();
+        out.flush();
+    }
+
+    private void cancelarServidor() throws IOException{
+        String id = menu.readString("Identificador: ");
+        String q = String.join(" ", "CANCELARSERVIDOR", id);
+        out.write(q);
+        out.newLine();
+        out.flush();
     }
 }

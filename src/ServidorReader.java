@@ -28,7 +28,7 @@ public class ServidorReader implements Runnable {
                 }
                 catch(IndexOutOfBoundsException e){
                     msg.write("Inadequado");
-                 } catch (PedidoInvalidoException | UtilizadorExistenteException e){
+                 } catch (PedidoInvalidoException | UtilizadorExistenteException | ServidorInexistenteException | ReservaInexistenteException e){
                     msg.write(e.getMessage());
                 }
             }
@@ -52,7 +52,7 @@ public class ServidorReader implements Runnable {
         return line;
     }
 
-    private String parse(String r) throws PedidoInvalidoException,UtilizadorExistenteException{
+    private String parse(String r) throws PedidoInvalidoException,UtilizadorExistenteException,ServidorInexistenteException,ReservaInexistenteException{
         String[] p = r.split(" ",2);
         switch(p[0].toUpperCase()){
             case "INICIARSESSAO":
@@ -61,9 +61,19 @@ public class ServidorReader implements Runnable {
             case "REGISTAR":
                 verificaAutenticacao(false);
                 return this.registar(p[1]);
-            case"TERMINARSESSAO":
+            case "TERMINARSESSAO":
                 verificaAutenticacao(true);
                 return this.terminarSessao();
+            case "PEDIR":
+                return "PEDIDO";
+            case "PEDIRPEQUENO":
+                return this.pedirServidor("Pequeno");
+            case "PEDIRGRANDE":
+                return this.pedirServidor("Grande");
+            case "CANCELARPEDIDO":
+                return "PEDIDOCANCELADO";
+            case "CANCELARSERVIDOR":
+                return this.cancelarServidor(p[1]);
             default: return "ERRO";
         }
     }
@@ -94,5 +104,16 @@ public class ServidorReader implements Runnable {
     private String terminarSessao(){
         this.utilizador = null;
         return "SESSAOTERMINADA";
+    }
+
+    private String pedirServidor(String tipo) throws ServidorInexistenteException{
+        int id = serverCloud.pedirServidor(this.utilizador, tipo);
+        return  String.join(" ", "IDENTIFICADOR", Integer.toString(id));
+    }
+
+    private String cancelarServidor(String in) throws ReservaInexistenteException{
+        int id = Integer.parseInt(in);
+        serverCloud.cancelarServidor(id, this.utilizador);
+        return "RESERVACANCELADA";
     }
 }

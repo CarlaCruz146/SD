@@ -74,6 +74,8 @@ public class ServidorReader implements Runnable {
                 return "PEDIDOCANCELADO";
             case "CANCELARSERVIDOR":
                 return this.cancelarServidor(p[1]);
+            case "DIVIDA":
+                return this.verDivida();
             default: return "ERRO";
         }
     }
@@ -115,5 +117,10 @@ public class ServidorReader implements Runnable {
         int id = Integer.parseInt(in);
         serverCloud.cancelarServidor(id, this.utilizador);
         return "RESERVACANCELADA";
+    }
+
+    private String verDivida() {
+        double val = this.utilizador.getDivida();
+        return String.join(" ", "DIVIDA:", Double.toString(val), "euros em dívida");
     }
 }

@@ -94,6 +94,11 @@ public class ServerCloud {
             String nomeS = servidor.getNome();
             Reserva r = new Reserva(reservas.size(), nomeS, tipo, 1, u.getEmail());
             this.reservas.put(r.getId(), r);
+
+            double val = u.getDivida();
+            val += servidor.getPreco();
+            u.setDivida(val);
+
             servidor.setEstado(1);
             return r.getId();
          }

@@ -6,7 +6,7 @@ public class ClienteMain {
         Socket socket = null;
         try {
 
-            socket = new Socket("127.0.0.1", 9999);
+            socket = new Socket("127.0.0.1", 3322);
             Menu menu =  new Menu();
             ClienteWriter clw = new ClienteWriter(menu, socket);
             ClienteReader clr = new ClienteReader(menu,socket);

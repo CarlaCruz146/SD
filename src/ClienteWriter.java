@@ -47,6 +47,8 @@ public class ClienteWriter implements Runnable{
                 if(op == 2){
                     cancelarServidor();
                 }
+                if(op == 3)
+                    consultarDivida();
                 if(op == 0)
                     terminarSessao();
                break;
@@ -113,6 +115,12 @@ public class ClienteWriter implements Runnable{
         String id = menu.readString("Identificador: ");
         String q = String.join(" ", "CANCELARSERVIDOR", id);
         out.write(q);
+        out.newLine();
+        out.flush();
+    }
+
+    private void consultarDivida() throws IOException{
+        out.write("DIVIDA");
         out.newLine();
         out.flush();
     }

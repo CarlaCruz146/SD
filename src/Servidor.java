@@ -1,8 +1,14 @@
+import java.util.Map;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toMap;
+
+
 public class Servidor {
     private String nome;
     private double preco;
     private String tipo;
     private int estado; //0 -> disponivel, 1 -> reservado a pedido, 2 -> reservado a leilao
+    private Map<Integer,Integer> propostas; //utilizador, valor
 
     public Servidor(String nome, double preco, String tipo, int estado){
         this.nome = nome;
@@ -27,6 +33,11 @@ public class Servidor {
         return estado;
     }
 
+    public Map<Integer,Integer>  getPropostas() {
+        return this.propostas.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
+
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -41,5 +52,9 @@ public class Servidor {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public void addProposta(int id, int valor) {
+        this.propostas.put(id, valor);
     }
 }

@@ -147,7 +147,10 @@ public class ServidorReader implements Runnable {
         return String.join(" ", "DIVIDA:", Double.toString(val));
     }
 
-    private String reservarLeilao(){
-        return "";
+    private String reservarLeilao(String in){
+        int valor = Integer.parseInt(in);
+        if( int id = serverCloud.reservaLeilao(valor, this.utilizador))
+            return "RESERVACANCELADA";
+        else String.join(" ", "IDENTIFICADOR", Integer.toString(id));;
     }
 }

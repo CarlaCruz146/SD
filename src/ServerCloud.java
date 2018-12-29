@@ -164,4 +164,34 @@ public class ServerCloud {
         }
         return  rs;
     }
+
+    public int vencedorLeilao(Servidor servidor){
+        int max = -1;
+        for(Integer i : servidor.getPropostas().values())
+            if (i> max)
+                max = i;
+        return
+    }
+
+    public int reservaLeilao(int valor, Utilizador u){
+        /*
+        for(List<Servidor> ree : this.servidores.values())
+            for(Servidor s: ree){
+                System.out.println("Estado " + s.getEstado());
+            }
+        Servidor servidor = verificaDisponibilidade(tipo);
+        if(servidor == null)
+            throw new ServidorInexistenteException("Não existem servidores disponíveis");
+        else {
+            if(servidor.getEstado()==2) {
+                this.cancelaServidorLeilao(servidor);
+            }
+            String nomeS = servidor.getNome();
+            Reserva r = new Reserva(reservas.size(), nomeS, tipo, 1, u.getEmail(),servidor.getPreco());
+            this.reservas.put(r.getId(), r);
+            servidor.setEstado(1);
+            return r.getId();
+        }
+    }
+    */
 }

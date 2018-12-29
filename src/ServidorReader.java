@@ -79,6 +79,14 @@ public class ServidorReader implements Runnable {
                 return this.apresentaReservas();
             case "DIVIDA":
                 return this.verDivida();
+            case "LEILAO":
+                return "PEDIDOLEILAO";
+            case "PEDIRPEQUENOLEILAO":
+                return "PROPOSTALEILAO";
+            case "PEDIRGRANDELEILAO":
+                return "PROPOSTALEILAO";
+            case "PROPOSTA":
+                return this.reservarLeilao();
             default: return "ERRO";
         }
     }
@@ -137,5 +145,9 @@ public class ServidorReader implements Runnable {
     private String verDivida() {
         double val = serverCloud.dividaAtual(this.utilizador);
         return String.join(" ", "DIVIDA:", Double.toString(val));
+    }
+
+    private String reservarLeilao(){
+        return "";
     }
 }

@@ -57,6 +57,16 @@ public class ClienteReader implements Runnable{
                 menu.setOp(1);
                 menu.showMenu();
                 break;
+            case "PEDIDOLEILAO":
+                System.out.println(comando);
+                menu.setOp(3);
+                menu.showMenu();
+                break;
+            case "PROPOSTALEILAO":
+                System.out.println(comando);
+                menu.setOp(4);
+                menu.showMenu();
+                break;
             default:
                 System.out.println(comando);
                 menu.showMenu();

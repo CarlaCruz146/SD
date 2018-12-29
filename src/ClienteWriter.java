@@ -51,6 +51,8 @@ public class ClienteWriter implements Runnable{
                     mostraReservasA();
                 if(op == 4)
                     consultarDivida();
+                if(op == 5)
+                    reservarLeilao();
                 if(op == 0)
                     terminarSessao();
                break;
@@ -59,6 +61,20 @@ public class ClienteWriter implements Runnable{
                     pedirPequeno();
                 if(op == 2)
                     pedirGrande();
+                if(op == 0)
+                    cancelarPedido();
+                break;
+            case 3:
+                if (op == 1)
+                    pedirPequenoLeilao();
+                if(op == 2)
+                    pedirGrandeLeilao();
+                if(op == 0)
+                    cancelarPedido();
+                break;
+            case 4:
+                if (op == 1)
+                    inserirProposta();
                 if(op == 0)
                     cancelarPedido();
                 break;
@@ -129,6 +145,30 @@ public class ClienteWriter implements Runnable{
     
     private void mostraReservasA() throws IOException{
         out.write("RESERVAS");
+        out.newLine();
+        out.flush();
+    }
+
+    private void reservarLeilao() throws IOException{
+        out.write("LEILAO");
+        out.newLine();
+        out.flush();
+    }
+
+    private void pedirPequenoLeilao() throws IOException {
+        out.write("PEDIRPEQUENOLEILAO");
+        out.newLine();
+        out.flush();
+    }
+
+    private void pedirGrandeLeilao() throws IOException {
+        out.write("PEDIRGRANDELEILAO");
+        out.newLine();
+        out.flush();
+    }
+
+    private void inserirProposta() throws IOException {
+        out.write("PROPOSTA");
         out.newLine();
         out.flush();
     }

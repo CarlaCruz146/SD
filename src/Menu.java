@@ -23,6 +23,7 @@ public class Menu {
                     "* 2 - Cancelar servidor a pedido    *\n"+
                     "* 3 - Consultar reservas ativas     *\n"+
                     "* 4 - Consultar dívida              *\n"+
+                    "* 5 - Reservar servidor em leilão   *\n"+
                     "* 0 - Terminar Sessao               *\n"+
                     "***********************************\n");
             break;
@@ -32,6 +33,17 @@ public class Menu {
                     "* 0 - Cancelar                    *\n"+
                     "***********************************\n");
             break;
+            case 3: System.out.println("********* MENU RESERVA *************\n"+
+                    "* 1 - Pequeno a Leilão            *\n"+
+                    "* 2 - Grande a Leilão             *\n"+
+                    "* 0 - Cancelar                    *\n"+
+                    "***********************************\n");
+            break;
+            case 4: System.out.println("********* MENU RESERVA *************\n"+
+                    "* 1 - Inserir valor da proposta   *\n"+
+                    "* 0 - Cancelar                    *\n"+
+                    "***********************************\n");
+                break;
         }System.out.println("Escolha uma opção");
     }
 

@@ -48,6 +48,8 @@ public class ClienteWriter implements Runnable{
                     cancelarServidor();
                 }
                 if(op == 3)
+                    mostraReservasA();
+                if(op == 4)
                     consultarDivida();
                 if(op == 0)
                     terminarSessao();
@@ -121,6 +123,12 @@ public class ClienteWriter implements Runnable{
 
     private void consultarDivida() throws IOException{
         out.write("DIVIDA");
+        out.newLine();
+        out.flush();
+    }
+    
+    private void mostraReservasA() throws IOException{
+        out.write("RESERVAS");
         out.newLine();
         out.flush();
     }

@@ -21,7 +21,8 @@ public class Menu {
             case 1: System.out.println("************* MENU ****************\n"+
                     "* 1 - Reservar servidor a pedido    *\n"+
                     "* 2 - Cancelar servidor a pedido    *\n"+
-                    "* 3 - Verifica saldo                *\n"+
+                    "* 3 - Consultar reservas ativas     *\n"+
+                    "* 4 - Consultar dívida              *\n"+
                     "* 0 - Terminar Sessao               *\n"+
                     "***********************************\n");
             break;

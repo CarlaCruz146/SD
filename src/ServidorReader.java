@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 public class ServidorReader implements Runnable {
     private Utilizador utilizador;
@@ -74,6 +75,8 @@ public class ServidorReader implements Runnable {
                 return "PEDIDOCANCELADO";
             case "CANCELARSERVIDOR":
                 return this.cancelarServidor(p[1]);
+            case "RESERVAS":
+                return this.apresentaReservas();
             case "DIVIDA":
                 return this.verDivida();
             default: return "ERRO";
@@ -119,8 +122,20 @@ public class ServidorReader implements Runnable {
         return "RESERVACANCELADA";
     }
 
+    private String apresentaReservas(){
+        List<Reserva> rs = serverCloud.reservasAtivas(this.utilizador);
+        String resultado = "";
+        for(Reserva re : rs){
+            int id = re.getId();
+            String nomeS = re.getNome();
+            String r = String.join(" ", "Reserva com ID", Integer.toString(id), "do Servidor", nomeS);
+            resultado = String.join(" RESERVA-> ", resultado, r);
+        }
+        return resultado;
+    }
+
     private String verDivida() {
-        double val = this.utilizador.getDivida();
-        return String.join(" ", "DIVIDA:", Double.toString(val), "euros em dívida");
+        double val = serverCloud.dividaAtual(this.utilizador);
+        return String.join(" ", "DIVIDA:", Double.toString(val));
     }
 }

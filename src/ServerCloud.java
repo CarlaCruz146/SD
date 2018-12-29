@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +78,7 @@ public class ServerCloud {
             if(r.getTipo().equals(s.getTipo()) && r.getNome().equals(s.getNome())) {
                 r.setEstado(0);
                 this.reservas.put(r.getId(),r);
+                r.setFimReserva(LocalDateTime.now());
                 break;
             }
     }
@@ -92,13 +96,13 @@ public class ServerCloud {
                 this.cancelaServidorLeilao(servidor);
             }
             String nomeS = servidor.getNome();
-            Reserva r = new Reserva(reservas.size(), nomeS, tipo, 1, u.getEmail());
+            Reserva r = new Reserva(reservas.size(), nomeS, tipo, 1, u.getEmail(),servidor.getPreco());
             this.reservas.put(r.getId(), r);
-
+            /*
             double val = u.getDivida();
             val += servidor.getPreco();
             u.setDivida(val);
-
+            */
             servidor.setEstado(1);
             return r.getId();
          }
@@ -112,11 +116,52 @@ public class ServerCloud {
             if(!r.getEmail().equals(u.getEmail()))
                 throw new ReservaInexistenteException("Reserva inexistente");
             r.setEstado(0);
+            r.setFimReserva(LocalDateTime.now());
             List<Servidor> serv = this.servidores.get(r.getTipo());
             for(Servidor s : serv) {
                 if (s.getNome().equals(r.getNome()))
                     s.setEstado(0);
             }
         }
+    }
+
+    public double dividaAtual(Utilizador u){
+        double val = 0;
+        for(Reserva r : reservas.values()) {
+            if(r.getEmail().equals(u.getEmail()))
+                val += calculaDivida(r);
+        }
+        return val;
+    }
+
+    private double calculaDivida(Reserva r) {
+        LocalDateTime inicio = r.getInicioReserva();
+        LocalDateTime fim;
+        double res = 0;
+
+        if(r.getEstado() == 0) fim = r.getFimReserva();
+        else fim = LocalDateTime.now();
+
+        long tempo = ChronoUnit.HOURS.between(inicio,fim);
+        /* para testar
+        long tempo = ChronoUnit.MINUTES.between(inicio,fim);
+        System.out.println(tempo + " minutos");*/
+        if(tempo == 0)
+            res = r.getPreco();
+        else
+            res += tempo * r.getPreco();
+
+        return res;
+    }
+
+    public List<Reserva> reservasAtivas(Utilizador u) {
+        List<Reserva> rs = new ArrayList<>();
+        for (Reserva r : reservas.values()) {
+            if (r.getEmail() == u.getEmail()) {
+                if (r.getEstado() == 1)
+                    rs.add(r);
+            }
+        }
+        return  rs;
     }
 }

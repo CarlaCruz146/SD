@@ -205,9 +205,9 @@ public class ServerCloud {
         double valor = s.getPropostas().get(cliente); // busca a proposta vencedora
         s.setPropostas(new HashMap<>()); // limpa as propostas
         String nomeS = s.getNome();
-        Reserva r = new Reserva(reservas.size(), nomeS, s.getTipo(), 2, cliente, valor); // cria a reserva
+        Reserva r = new Reserva(reservas.size(), nomeS, s.getTipo(), 1, cliente, valor); // cria a reserva
         this.reservas.put(r.getId(), r);
-        s.setEstado(1);
+        s.setEstado(2);
         return r;
     }
 }

@@ -11,6 +11,7 @@ public class ServidorReader implements Runnable {
     private MensagemBuffer msg;
     private Socket socket;
     private ServerCloud serverCloud;
+    private String tipo="";
     //private Cliente c;
 
     public ServidorReader(MensagemBuffer msg,Socket socket) throws IOException {
@@ -82,8 +83,10 @@ public class ServidorReader implements Runnable {
             case "LEILAO":
                 return "PEDIDOLEILAO";
             case "PEDIRPEQUENOLEILAO":
+                this.tipo= "Pequeno";
                 return "PROPOSTALEILAO";
             case "PEDIRGRANDELEILAO":
+                this.tipo= "Grande";
                 return "PROPOSTALEILAO";
             case "PROPOSTA":
                 return this.reservarLeilao(p[1]);
@@ -150,7 +153,7 @@ public class ServidorReader implements Runnable {
     private String reservarLeilao(String in) throws ServidorInexistenteException{
         double valor = Double.parseDouble(in);
         //esta como pequeno porque ainda não está a ir buscar o tipo
-        Servidor s = serverCloud.escolheServidor(valor, "Pequeno",this.utilizador);
+        Servidor s = serverCloud.escolheServidor(valor, this.tipo,this.utilizador);
         Reserva r = serverCloud.atribuiReservaLeilao(s);
 
         if(r.getEmail().equals(this.utilizador.getEmail()))

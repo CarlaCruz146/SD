@@ -14,10 +14,10 @@ public class ServidorReader implements Runnable {
     private String tipo="";
     //private Cliente c;
 
-    public ServidorReader(MensagemBuffer msg,Socket socket) throws IOException {
+    public ServidorReader(MensagemBuffer msg,Socket socket,ServerCloud serverCloud) throws IOException {
         this.msg = msg;
         this.socket = socket;
-        this.serverCloud = new ServerCloud();
+        this.serverCloud = serverCloud;
         this.utilizador = null;
         in =new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }

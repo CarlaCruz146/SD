@@ -65,6 +65,10 @@ public class ClienteReader implements Runnable{
                 menu.setOp(4);
                 menu.showMenu();
                 break;
+            case "PERDELEILAO":
+                System.out.println("Perdeu o leilão. Reserva não efetuada");
+                menu.setOp(4);
+                menu.showMenu();
             default:
                 System.out.println(comando);
                 menu.showMenu();

@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
@@ -8,13 +9,14 @@ public class Servidor {
     private double preco;
     private String tipo;
     private int estado; //0 -> disponivel, 1 -> reservado a pedido, 2 -> reservado a leilao
-    private Map<Integer,Integer> propostas; //utilizador, valor
+    private Map<String,Double> propostas; //utilizador, valor
 
     public Servidor(String nome, double preco, String tipo, int estado){
         this.nome = nome;
         this.preco = preco;
         this.tipo = tipo;
         this.estado = estado;
+        this.propostas = new HashMap<>();
     }
 
     public String getNome(){
@@ -33,7 +35,7 @@ public class Servidor {
         return estado;
     }
 
-    public Map<Integer,Integer>  getPropostas() {
+    public Map<String,Double>  getPropostas() {
         return this.propostas.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
 
     }
@@ -54,7 +56,11 @@ public class Servidor {
         this.estado = estado;
     }
 
-    public void addProposta(int id, int valor) {
-        this.propostas.put(id, valor);
+    public void setPropostas(Map<String, Double> propostas) {
+        this.propostas = propostas.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
+    }
+
+    public void addProposta(String email, double valor) {
+        this.propostas.put(email, valor);
     }
 }

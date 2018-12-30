@@ -86,7 +86,7 @@ public class ServidorReader implements Runnable {
             case "PEDIRGRANDELEILAO":
                 return "PROPOSTALEILAO";
             case "PROPOSTA":
-                return this.reservarLeilao();
+                return this.reservarLeilao(p[1]);
             default: return "ERRO";
         }
     }
@@ -147,10 +147,14 @@ public class ServidorReader implements Runnable {
         return String.join(" ", "DIVIDA:", Double.toString(val));
     }
 
-    private String reservarLeilao(String in){
-        int valor = Integer.parseInt(in);
-        if( int id = serverCloud.reservaLeilao(valor, this.utilizador))
-            return "RESERVACANCELADA";
-        else String.join(" ", "IDENTIFICADOR", Integer.toString(id));;
+    private String reservarLeilao(String in) throws ServidorInexistenteException{
+        double valor = Double.parseDouble(in);
+        //esta como pequeno porque ainda não está a ir buscar o tipo
+        Servidor s = serverCloud.escolheServidor(valor, "Pequeno",this.utilizador);
+        Reserva r = serverCloud.atribuiReservaLeilao(s);
+
+        if(r.getEmail().equals(this.utilizador.getEmail()))
+            return String.join(" ", "IDENTIFICADOR", Integer.toString(r.getId()));
+        else return "PERDELEILAO";
     }
 }

@@ -168,8 +168,8 @@ public class ClienteWriter implements Runnable{
     }
 
     private void inserirProposta() throws IOException {
-        String id = menu.readString("Proposta: ");
-        String q = String.join(" ", "PROPOSTA", id);
+        String valor = menu.readString("Proposta: ");
+        String q = String.join(" ", "PROPOSTA", valor);
         out.write(q);
         out.newLine();
         out.flush();

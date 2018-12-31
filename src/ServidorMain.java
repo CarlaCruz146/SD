@@ -5,7 +5,7 @@ import java.net.Socket;
 public class ServidorMain {
     public static void main(String[] args) throws IOException {
         ServerSocket s = new ServerSocket(9999);
-        ServerCLoud serverCloud = new ServerCloud();
+        ServerCloud serverCloud = new ServerCloud();
         while(true){
             MensagemBuffer msg = new MensagemBuffer();
             Socket socket = s.accept();

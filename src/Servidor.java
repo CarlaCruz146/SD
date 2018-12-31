@@ -9,14 +9,14 @@ public class Servidor {
     private double preco;
     private String tipo;
     private int estado; //0 -> disponivel, 1 -> reservado a pedido, 2 -> reservado a leilao
-    private Map<String,Double> propostas; //utilizador, valor
+    private Leilao leilao;
 
     public Servidor(String nome, double preco, String tipo, int estado){
         this.nome = nome;
         this.preco = preco;
         this.tipo = tipo;
         this.estado = estado;
-        this.propostas = new HashMap<>();
+        this.leilao = new Leilao();
     }
 
     public String getNome(){
@@ -35,10 +35,10 @@ public class Servidor {
         return estado;
     }
 
-    public Map<String,Double>  getPropostas() {
-        return this.propostas.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
-
+    public Leilao getLeilao() {
+        return leilao;
     }
+
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -56,11 +56,9 @@ public class Servidor {
         this.estado = estado;
     }
 
-    public void setPropostas(Map<String, Double> propostas) {
-        this.propostas = propostas.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue()));
+    public void setLeilao(Leilao leilao) {
+        this.leilao = leilao;
     }
 
-    public void addProposta(String email, double valor) {
-        this.propostas.put(email, valor);
-    }
+
 }

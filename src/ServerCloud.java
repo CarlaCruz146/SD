@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,6 +16,9 @@ public class ServerCloud {
     private Lock utilizadorLock;
     private Lock servidorLock;
     private Lock reservaLock;
+    private Condition conditionS;
+    private Condition conditionR;
+
 
     public ServerCloud() {
         this.reservaLock = new ReentrantLock();
@@ -24,6 +28,8 @@ public class ServerCloud {
         this.utilizadores = new HashMap<>();
         this.servidores = new HashMap<>();
         this.reservas = new HashMap<>();
+        this.conditionS = servidorLock.newCondition();
+        this.conditionR = reservaLock.newCondition();
         this.addServidores();
     }
 
@@ -71,6 +77,7 @@ public class ServerCloud {
     public Servidor verificaDisponibilidade(String tipo) {
         Servidor servidor = null;
         try {
+            servidorLock.lock();
             List<Servidor> servidores = this.servidores.get(tipo);
             for (Servidor s : servidores)
                 if (s.getEstado() == 0){
@@ -95,6 +102,7 @@ public class ServerCloud {
                     reservaLock.unlock();
                 }
                     r.setFimReserva(LocalDateTime.now());
+                conditionS.signalAll();
                 break;
             }
     }
@@ -137,8 +145,8 @@ public class ServerCloud {
                 if (!r.getEmail().equals(u.getEmail()))
                     throw new ReservaInexistenteException("Reserva inexistente");
                 r.setEstado(0);
-                r.setFimReserva(LocalDateTime.now());
                 List<Servidor> serv = this.servidores.get(r.getTipo());
+                conditionR.signalAll();
                 for (Servidor s : serv) {
                     if (s.getNome().equals(r.getNome()))
                         s.setEstado(0);
@@ -189,16 +197,8 @@ public class ServerCloud {
         return rs;
     }
     //retorna o email do vencedor do leilao
-    public String vencedorLeilao(Servidor servidor) {
-        double max = 0;
-        String r = "";
-        for (Map.Entry<String, Double> e : servidor.getPropostas().entrySet()) {
-            if (e.getValue() > max) {
-                max = e.getValue();
-                r = e.getKey();
-            }
-        }
-        return r;
+    public String vencedorLeilao(Leilao l) {
+        return l.getVencedor();
     }
     //ve se existem servidores disponiveis
     public Servidor verificaDisponibilidadeLeilao(String tipo) {
@@ -215,28 +215,45 @@ public class ServerCloud {
         }
     }
 
-    //busca um servidor disponivel do tipo dado e adiciona proposta do utilizador
-    public Servidor escolheServidor(double valor, String tipo, Utilizador u) throws ServidorInexistenteException {
-        Servidor servidor = verificaDisponibilidadeLeilao(tipo);
-        if (servidor == null)
-            throw new ServidorInexistenteException("Não existem servidores disponíveis");
-        else servidor.addProposta(u.getEmail(), valor);
+    //busca um servidor do tipo dado e adiciona proposta do utilizador
+    public Servidor escolherServidor(double valor, String tipo, Utilizador u) throws ServidorInexistenteException, InterruptedException {
+        Servidor r = null;
+        List<Servidor> servidores;
+        servidorLock.lock();
+        Leilao l = new Leilao();
+        try {
+            while ((r = verificaDisponibilidadeLeilao(tipo)) == null) {
+                if (l.getValor() < valor) {
+                    l.setTipo(tipo);
+                    l.setVencedor(u.getEmail());
+                    l.setValor(valor);
+                }
+                conditionS.await();
+            }
+                servidores = this.servidores.get(tipo);
+                for (Servidor s : servidores)
+                    if (s.getEstado() == 0) {
+                        s.setLeilao(l);
+                        return s;
+                    }
+            }
+         finally {
+            servidorLock.unlock();
+        }
 
-        return servidor;
+        return r;
     }
 
     public Reserva atribuiReservaLeilao(Servidor s) {
         //busca o vencedor
-        String cliente = vencedorLeilao(s);
-        int idR;
-        double valor = s.getPropostas().get(cliente); // busca a proposta vencedora
-        s.setPropostas(new HashMap<>()); // limpa as propostas
+        String cliente = vencedorLeilao(s.getLeilao());
         String nomeS = s.getNome();
+        int idR;
         Reserva r = null;
         reservaLock.lock();
         try {
             idR = reservas.size();
-            r = new Reserva(idR, nomeS, s.getTipo(), 1, cliente, valor); // cria a reserva
+            r = new Reserva(idR, nomeS, s.getTipo(), 1, cliente, s.getLeilao().getValor()); // cria a reserva
             this.reservas.put(idR, r);
         } finally {
             reservaLock.unlock();

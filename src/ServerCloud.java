@@ -111,6 +111,7 @@ public class ServerCloud {
                     utilizadorLock.unlock();
                 }
                 r.setEstado(0);
+                r.setFimReserva(LocalDateTime.now());
                 reservaLock.lock();
                 try {
                     this.reservas.put(r.getId(), r);
@@ -189,15 +190,14 @@ public class ServerCloud {
         if (r.getEstado() == 0) fim = r.getFimReserva();
         else fim = LocalDateTime.now();
 
-        long tempo = ChronoUnit.HOURS.between(inicio, fim);
+        long horas = ChronoUnit.HOURS.between(inicio, fim);
+        long minutos = ChronoUnit.MINUTES.between(inicio,fim);
         /* para testar
         long tempo = ChronoUnit.MINUTES.between(inicio,fim);
         System.out.println(tempo + " minutos");*/
-        if (tempo == 0)
-            res = r.getPreco();
-        else
-            res += tempo * r.getPreco();
-
+        if(minutos % 60 == 0)
+            res += horas * r.getPreco();
+        else  res += (horas+1)*r.getPreco();
         return res;
     }
 

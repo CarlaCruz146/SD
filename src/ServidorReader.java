@@ -11,15 +11,13 @@ public class ServidorReader implements Runnable {
     private MensagemBuffer msg;
     private Socket socket;
     private ServerCloud serverCloud;
-    private String tipo = "";
-    //private Cliente c;
 
     public ServidorReader(MensagemBuffer msg, Socket socket, ServerCloud serverCloud) throws IOException {
         this.msg = msg;
         this.socket = socket;
         this.serverCloud = serverCloud;
         this.utilizador = null;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     public void run() {
@@ -29,10 +27,13 @@ public class ServidorReader implements Runnable {
                 msg.write(parse(r));
             } catch (IndexOutOfBoundsException e) {
                 msg.write("Inadequado");
-            } catch (PedidoInvalidoException | UtilizadorExistenteException | ServidorInexistenteException | ReservaInexistenteException e) {
+            } catch (PedidoInvalidoException | UtilizadorExistenteException | ServidorInexistenteException
+                    | ReservaInexistenteException | LicitacaoInvalidaException | LeilaoInexistenteException
+                    | InterruptedException e) {
                 msg.write(e.getMessage());
             }
         }
+     //   endConnection();
         if (this.utilizador == null) {
             try {
                 socket.shutdownInput();
@@ -55,7 +56,9 @@ public class ServidorReader implements Runnable {
         return line;
     }
 
-    private String parse(String r) throws PedidoInvalidoException, UtilizadorExistenteException, ServidorInexistenteException, ReservaInexistenteException {
+    private String parse(String r) throws PedidoInvalidoException, UtilizadorExistenteException,
+            ServidorInexistenteException, ReservaInexistenteException, InterruptedException,
+            LeilaoInexistenteException, LicitacaoInvalidaException{
         String[] p = r.split(" ", 2);
         switch (p[0].toUpperCase()) {
             case "INICIARSESSAO":
@@ -84,17 +87,9 @@ public class ServidorReader implements Runnable {
             case "LEILAO":
                 return "PEDIDOLEILAO";
             case "PEDIRPEQUENOLEILAO":
-                this.tipo = "Pequeno";
-                return "PROPOSTALEILAO";
+                return reservarLeilao(p[1],"Pequeno");
             case "PEDIRGRANDELEILAO":
-                this.tipo = "Grande";
-                return "PROPOSTALEILAO";
-            case "PROPOSTA":
-                try {
-                    return this.reservarLeilao(p[1]);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                return reservarLeilao(p[1],"Grande");
             default:
                 return "ERRO";
         }
@@ -104,7 +99,7 @@ public class ServidorReader implements Runnable {
         String[] p = in.split(" ");
         if (p.length != 2)
             throw new PedidoInvalidoException("Dados incorretos");
-        this.utilizador = serverCloud.iniciarSessao(p[0], p[1]);
+        this.utilizador = serverCloud.iniciarSessao(p[0], p[1],msg);
         return "AUTENTICADO";
     }
 
@@ -133,7 +128,7 @@ public class ServidorReader implements Runnable {
         return String.join(" ", "IDENTIFICADOR", Integer.toString(id));
     }
 
-    private String cancelarServidor(String in) throws ReservaInexistenteException {
+    private String cancelarServidor(String in) throws ReservaInexistenteException, LeilaoInexistenteException {
         int id = Integer.parseInt(in);
         serverCloud.cancelarServidor(id, this.utilizador);
         return "RESERVACANCELADA";
@@ -156,21 +151,11 @@ public class ServidorReader implements Runnable {
         return String.join(" ", "DIVIDA:", Double.toString(val));
     }
 
-    private String reservarLeilao(String in) throws ServidorInexistenteException, InterruptedException {
+    private String reservarLeilao(String in, String tipo) throws InterruptedException,LicitacaoInvalidaException,LeilaoInexistenteException {
         double valor = Double.parseDouble(in);
-        Servidor s = null;
-        Leilao l = new Leilao();
-        s = serverCloud.verificaDisponibilidade(this.tipo);
-        if (s != null) {
-            int id = serverCloud.pedirServidor(this.utilizador, this.tipo);
-            return String.join(" ", "IDENTIFICADOR", Integer.toString(id));
-        } else {
-            s = serverCloud.escolherServidor(valor, this.tipo, this.utilizador);
-            Reserva r = serverCloud.atribuiReservaLeilao(s);
-            if (r.getEmail().equals(this.utilizador.getEmail()))
-                return String.join(" ", "IDENTIFICADOR", Integer.toString(r.getId()));
-            else return "PERDELEILAO";
-        }
+        int idR = serverCloud.reservarLeilao(valor,tipo,this.utilizador);
+        if(idR!=-1) return String.join(" ", "IDENTIFICADOR", Integer.toString(idR));
+        return "LEILAOEMCURSO";
     }
 }
 

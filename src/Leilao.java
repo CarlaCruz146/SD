@@ -1,41 +1,36 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Leilao {
-    private String vencedor;
-    private double valorVenc;
+    private Lance bestLance;
+    private int id;
+    List<Utilizador> compradores;
     private String tipo;
 
-    public Leilao(){
-        this.vencedor="";
-        this.valorVenc=0;
-        this.tipo="";
-    }
-
-    public Leilao(String vencedor, int valorVenc, String tipo ){
-        this.vencedor = vencedor;
-        this.valorVenc = valorVenc;
+    public Leilao(int id, String tipo) {
+        this.bestLance = new Lance(null,0);
+        this.id = id;
+        this.compradores = new ArrayList<>();
         this.tipo = tipo;
     }
-    public String getVencedor() {
-        return this.vencedor;
+
+    public int getId() {
+        return this.id;
     }
 
-    public double getValor() {
-        return this.valorVenc;
-    }
-
-    public String getTipo() {
+    public String getTipo(){
         return this.tipo;
     }
 
-    public void setValor(double valorVenc) {
-        this.valorVenc = valorVenc;
+    synchronized public void proposta(Utilizador u, double proposta) throws LicitacaoInvalidaException {
+        if (bestLance.getValor() > proposta)
+            throw new LicitacaoInvalidaException("Já existe uma licitação com um valor superior");
+
+        compradores.add(u);
+        bestLance = new Lance(u, proposta);
     }
 
-    public void setVencedor(String vencedor) {
-        this.vencedor = vencedor;
+    synchronized public Lance terminaLeilao(){
+        return bestLance;
     }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
 }

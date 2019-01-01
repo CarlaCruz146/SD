@@ -1,22 +1,14 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toMap;
-
-
 public class Servidor {
     private String nome;
     private double preco;
     private String tipo;
     private int estado; //0 -> disponivel, 1 -> reservado a pedido, 2 -> reservado a leilao
-    private Leilao leilao;
 
     public Servidor(String nome, double preco, String tipo, int estado){
         this.nome = nome;
         this.preco = preco;
         this.tipo = tipo;
         this.estado = estado;
-        this.leilao = new Leilao();
     }
 
     public String getNome(){
@@ -35,11 +27,6 @@ public class Servidor {
         return estado;
     }
 
-    public Leilao getLeilao() {
-        return leilao;
-    }
-
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -55,10 +42,5 @@ public class Servidor {
     public void setEstado(int estado) {
         this.estado = estado;
     }
-
-    public void setLeilao(Leilao leilao) {
-        this.leilao = leilao;
-    }
-
 
 }

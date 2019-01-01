@@ -156,13 +156,17 @@ public class ClienteWriter implements Runnable{
     }
 
     private void pedirPequenoLeilao() throws IOException {
-        out.write("PEDIRPEQUENOLEILAO");
+        String valor = menu.readString("Valor: ");
+        String q = String.join(" ", "PEDIRPEQUENOLEILAO", valor);
+        out.write(q);
         out.newLine();
         out.flush();
     }
 
     private void pedirGrandeLeilao() throws IOException {
-        out.write("PEDIRGRANDELEILAO");
+        String valor = menu.readString("Valor: ");
+        String q = String.join(" ", "PEDIRGRANDELEILAO", valor);
+        out.write(q);
         out.newLine();
         out.flush();
     }

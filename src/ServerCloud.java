@@ -5,19 +5,34 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Classe ServerCloud.
+ * @author Grupo 24
+ */
 public class ServerCloud {
+    /** Utilizadores da cloud */
     private Map<String, Utilizador> utilizadores;
+    /** Servidores da cloud */
     private Map<String, List<Servidor>> servidores;
+    /** Reservas de servidores da cloud */
     private Map<Integer, Reserva> reservas;
+    /** Leilões */
     private Map<Integer, Leilao> leiloes;
+    /** Lock do utilizador */
     private Lock utilizadorLock;
+    /** Lock do servidor */
     private Lock servidorLock;
+    /** Lock da reserva */
     private Lock reservaLock;
+    /** Lock do leilao */
     private Lock leilaoLock;
+    /** Condição */
     private Condition conditionS;
 
-    //ver se e lockleilao ou servidorlock
-    public ServerCloud() {
+    /**
+     * Construtor da classe ServerCloud sem parâmetros.
+     */
+    public ServerCloud() { //ver se e lockleilao ou servidorlock
         this.reservaLock = new ReentrantLock();
         this.servidorLock = new ReentrantLock();
         this.leilaoLock = new ReentrantLock();
@@ -30,6 +45,9 @@ public class ServerCloud {
         this.addServidores();
     }
 
+    /**
+     * Método que adiciona servidores á cloud.
+     */
     public void addServidores() {
         Servidor servidor = new Servidor("t1", 1, "Pequeno", 0);
         Servidor servidor1 = new Servidor("t2", 1, "Pequeno", 0);
@@ -47,6 +65,14 @@ public class ServerCloud {
         this.servidores.put(servidor3.getTipo(), s2);
     }
 
+    /**
+     * Inicia sessão.
+     * @param email Email inserido
+     * @param password Password inserida
+     * @param msg Buffer de mensagens
+     * @return utilizador autenticado
+     * @throws PedidoInvalidoException
+     */
     public Utilizador iniciarSessao(String email, String password, MensagemBuffer msg) throws PedidoInvalidoException {
         Utilizador u;
         utilizadorLock.lock();
@@ -61,6 +87,12 @@ public class ServerCloud {
         return u;
     }
 
+    /**
+     * Regista um utilizador.
+     * @param email Email do utilizador
+     * @param password Password do utilizador
+     * @throws UtilizadorExistenteException
+     */
     public void registar(String email, String password) throws UtilizadorExistenteException {
         utilizadorLock.lock();
         try {
@@ -71,7 +103,11 @@ public class ServerCloud {
             utilizadorLock.unlock();
         }
     }
-
+    /**
+     * Verifica se existe algum servidor disponível de um determindado tipo.
+     * @param tipo Tipo de servidor
+     * @return Servidor
+     */
     public Servidor verificaDisponibilidade(String tipo) {
         Servidor servidor = null;
         servidorLock.lock();
@@ -96,6 +132,10 @@ public class ServerCloud {
         return servidor;
     }
 
+    /**
+     * Cancela reserva de servidor leiloado.
+     * @param s Servidor
+     */
     public void cancelaServidorEmLeilao(Servidor s) {
         for (Reserva r : this.reservas.values())
             if (r.getTipo().equals(s.getTipo()) && r.getNome().equals(s.getNome()) && r.getEstado()==1) {
@@ -118,6 +158,13 @@ public class ServerCloud {
             }
     }
 
+    /**
+     * Reserva um servidor a pedido.
+     * @param u Utilizador que fez a reserva
+     * @param tipo Tipo do servidor
+     * @return id da reserva
+     * @throws ServidorInexistenteException
+     */
     public int pedirServidor(Utilizador u, String tipo) throws ServidorInexistenteException {
         int idR;
         Servidor servidor = verificaDisponibilidade(tipo);
@@ -138,6 +185,13 @@ public class ServerCloud {
         }
     }
 
+    /**
+     * Cancela a reserva de um servidor.
+     * @param id Id da reserva a cancelar
+     * @param u Utilizador que pretende cancelar a reserva
+     * @throws ReservaInexistenteException
+     * @throws LeilaoInexistenteException
+     */
     public void cancelarServidor(int id, Utilizador u) throws ReservaInexistenteException, LeilaoInexistenteException {
         reservaLock.lock();
         try {
@@ -169,6 +223,11 @@ public class ServerCloud {
         }
     }
 
+    /**
+     * Devolve a dívida atual de determinado utilizador.
+     * @param u Utilizador
+     * @return dívida
+     */
     public double dividaAtual(Utilizador u) {
         double val = 0;
         for (Reserva r : reservas.values()) {
@@ -177,7 +236,11 @@ public class ServerCloud {
         }
         return val;
     }
-
+    /**
+     * Calcula a dívida incorrente ao utilizador que fez determinada reserva.
+     * @param r Reserva
+     * @return dívida
+     */
     private double calculaDivida(Reserva r) {
         LocalDateTime inicio = r.getInicioReserva();
         LocalDateTime fim;
@@ -194,6 +257,11 @@ public class ServerCloud {
         return res;
     }
 
+    /**
+     * Devolve a lista das reservas ativas de determinado utilizador.
+     * @param u Utilizador
+     * @return List
+     */
     public List<Reserva> reservasAtivas(Utilizador u) {
         List<Reserva> rs = new ArrayList<>();
         for (Reserva r : reservas.values()) {
@@ -205,12 +273,22 @@ public class ServerCloud {
         return rs;
     }
 
-
+    /**
+     * Insere proposta de determinado utilizador no leilão em questão.
+     * @param idLeilao Id do leilão
+     * @param u Utilizador que fez uma proposta
+     * @param preco Preço da proposta feita
+     */
     public void proposta(int idLeilao, Utilizador u, double preco) throws LicitacaoInvalidaException, LeilaoInexistenteException {
         Leilao l = getLeilao(idLeilao);
         l.proposta(u, preco);
     }
 
+    /**
+     * Devolve leilão com determinado id.
+     * @param idLeilao Id do leilão
+     * @return Leilão
+     */
     private Leilao getLeilao(int idLeilao) throws LeilaoInexistenteException {
         Leilao l;
         leilaoLock.lock();
@@ -223,6 +301,11 @@ public class ServerCloud {
         return l;
     }
 
+    /**
+     * Inicia o leilão.
+     * @param tipo Tipo do servidor a leilão
+     * @return id do leilão iniciado
+     */
     public int iniciaLeilao(String tipo) {
         int idLeilao;
         leilaoLock.lock();
@@ -236,6 +319,12 @@ public class ServerCloud {
         return idLeilao;
     }
 
+    /**
+     * Termina o leilão.
+     * @param tipo Tipo do servidor a leilão
+     * @param s Servidor a leilão
+     * @throws LeilaoInexistenteException
+     */
     public void encerraLeilao(String tipo, Servidor s) throws LeilaoInexistenteException {
         int idLeilao = -1;
         Lance lance;
@@ -260,7 +349,11 @@ public class ServerCloud {
         }
 
     }
-
+    /**
+     * Devolve o lance vencedor do leilão.
+     * @param idLeilao Id do leilão
+     * @return Lance
+     */
     public Lance vencedorLeilao(int idLeilao) throws LeilaoInexistenteException {
         Leilao l;
         leilaoLock.lock();
@@ -273,6 +366,11 @@ public class ServerCloud {
         return l.terminaLeilao();
     }
 
+    /**
+     * Verifica servidores disponíveis para reservas a leilão.
+     * @param tipo Tipo de servidor
+     * @return Servidor
+     */
     public Servidor verificaDisponibilidadeLeilao(String tipo) {
         Servidor servidor = null;
         List<Servidor> servidores;
@@ -291,6 +389,16 @@ public class ServerCloud {
         return servidor;
     }
 
+    /**
+     * Reserva um servidor a leilão.
+     * @param valor Valor da proposta
+     * @param tipo Tipo de servidor
+     * @param u Utilizador que faz a reserva
+     * @return id da reserva
+     * @throws InterruptedException
+     * @throws LicitacaoInvalidaException
+     * @throws LeilaoInexistenteException
+     */
     public int reservarLeilao(double valor, String tipo, Utilizador u) throws InterruptedException, LicitacaoInvalidaException, LeilaoInexistenteException {
         Servidor s;
         int idR = -1;
@@ -318,6 +426,10 @@ public class ServerCloud {
         return idR;
     }
 
+    /**
+     * Devolve uma lista com os servidores disponíveis.
+     * @return List
+     */
     public List<Servidor> getServidoresAtivos() {
         List<Servidor> r = new ArrayList<>();
         for (Servidor s : servidores.get("Pequeno"))

@@ -2,7 +2,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Classe main do Servidor.
+ * @author Grupo 24
+ */
 public class ServidorMain {
+    /**
+     * Método main.
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         ServerSocket s = new ServerSocket(9999);
         ServerCloud serverCloud = new ServerCloud();

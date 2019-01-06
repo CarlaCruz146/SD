@@ -8,13 +8,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Classe da thread ServidorReader.
+ * @author Grupo 24
+ */
 public class ServidorReader implements Runnable {
+    /** Utilizador autenticado*/
     private Utilizador utilizador;
+    /** BufferedReader */
     private BufferedReader in;
+    /** Buffer de mensagens */
     private MensagemBuffer msg;
+    /** Socket */
     private Socket socket;
+    /** ServerCloud */
     private ServerCloud serverCloud;
 
+    /**
+     * Construtor da classe ServidorReader com parâmetros.
+     * @param msg Buffer de mensagens
+     * @param socket Socket
+     * @param serverCloud ServerCloud
+     * @throws IOException
+     */
     public ServidorReader(MensagemBuffer msg, Socket socket, ServerCloud serverCloud) throws IOException {
         this.msg = msg;
         this.socket = socket;
@@ -23,6 +40,9 @@ public class ServidorReader implements Runnable {
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
+    /**
+     * Método para executar a thread ServidorWriter.
+     */
     public void run() {
         String r;
         while ((r = readLine()) != null) {
@@ -47,7 +67,10 @@ public class ServidorReader implements Runnable {
             }
         }
     }
-
+    /**
+     * Lê linha do BufferedReader.
+     * @return String lida
+     */
     private String readLine() {
         String line = null;
         try {
@@ -58,7 +81,17 @@ public class ServidorReader implements Runnable {
 
         return line;
     }
-
+    /**
+     * Faz parse das strings lidas
+     * @return String
+     * @throws PedidoInvalidoException
+     * @throws UtilizadorExistenteException
+     * @throws ServidorInexistenteException
+     * @throws ReservaInexistenteException
+     * @throws InterruptedException
+     * @throws LeilaoInexistenteException
+     * @throws LicitacaoInvalidaException
+     */
     private String parse(String r) throws PedidoInvalidoException, UtilizadorExistenteException,
             ServidorInexistenteException, ReservaInexistenteException, InterruptedException,
             LeilaoInexistenteException, LicitacaoInvalidaException{
@@ -84,7 +117,6 @@ public class ServidorReader implements Runnable {
             case "CANCELARSERVIDOR":
                 return this.cancelarServidor(p[1]);
             case "RESERVAS":
-              //  return this.apresentaReservas().toString();
                 return this.apresentaReservas().toString();
             case "DIVIDA":
                 return this.verDivida();
@@ -101,6 +133,12 @@ public class ServidorReader implements Runnable {
         }
     }
 
+    /**
+     * Inicia sessão.
+     * @param in Linha lida do BufferedReader
+     * @return String
+     * @throws PedidoInvalidoException
+     */
     private String iniciarSessao(String in) throws PedidoInvalidoException {
         String[] p = in.split(" ");
         if (p.length != 2)
@@ -109,6 +147,13 @@ public class ServidorReader implements Runnable {
         return "AUTENTICADO";
     }
 
+    /**
+     * Regista um utilizador.
+     * @param in Linha lida do BufferedReader
+     * @return String
+     * @throws PedidoInvalidoException
+     * @throws UtilizadorExistenteException
+     */
     private String registar(String in) throws PedidoInvalidoException, UtilizadorExistenteException {
         String[] p = in.split(" ");
         if (p.length != 2)
@@ -117,6 +162,11 @@ public class ServidorReader implements Runnable {
         return "REGISTADO";
     }
 
+    /**
+     * Verifica a autenticação de um utilizador.
+     * @param estado Estado da sessão
+     * @throws PedidoInvalidoException
+     */
     private void verificaAutenticacao(Boolean estado) throws PedidoInvalidoException {
         if (estado && utilizador == null)
             throw new PedidoInvalidoException("Acesso negado");
@@ -124,22 +174,44 @@ public class ServidorReader implements Runnable {
             throw new PedidoInvalidoException("Já existe um utilizador autenticado");
     }
 
+    /**
+     * Termina sessão.
+     * @return String
+     * @throws PedidoInvalidoException
+     */
     private String terminarSessao() {
         this.utilizador = null;
         return "SESSAOTERMINADA";
     }
 
+    /**
+     * Reserva um servidor a pedido.
+     * @param tipo Tipo de servidor
+     * @return String
+     * @throws ServidorInexistenteException
+     */
     private String pedirServidor(String tipo) throws ServidorInexistenteException {
         int id = serverCloud.pedirServidor(this.utilizador, tipo);
         return String.join(" ", "IDENTIFICADOR", Integer.toString(id));
     }
 
+    /**
+     * Cancela a reserva de um servidor.
+     * @param in Linha lida do BufferedReader
+     * @return String
+     * @throws ReservaInexistenteException
+     * @throws LeilaoInexistenteException
+     */
     private String cancelarServidor(String in) throws ReservaInexistenteException, LeilaoInexistenteException {
         int id = Integer.parseInt(in);
         serverCloud.cancelarServidor(id, this.utilizador);
         return "RESERVACANCELADA";
     }
 
+    /**
+     * Devolve uma lista com informação das reservas ativas do utilizador autenticado.
+     * @return List
+     */
     private List<String> apresentaReservas() {
         List<Reserva> rs = serverCloud.reservasAtivas(this.utilizador);
         List<String> resultado = new ArrayList<>();
@@ -153,11 +225,24 @@ public class ServidorReader implements Runnable {
         return resultado;
     }
 
+    /**
+     * Apresenta a dívida atual do utilizador.
+     * @return String
+     */
     private String verDivida() {
         double val = serverCloud.dividaAtual(this.utilizador);
         return String.join(" ", "DIVIDA:", Double.toString(val));
     }
 
+    /**
+     * Reserva um servidor a leilão.
+     * @param in Linha lida do BufferedReader
+     * @param tipo Tipo de servidor
+     * @return String
+     * @throws InterruptedException
+     * @throws LicitacaoInvalidaException
+     * @throws LeilaoInexistenteException
+     */
     private String reservarLeilao(String in, String tipo) throws InterruptedException,LicitacaoInvalidaException,LeilaoInexistenteException {
         double valor = Double.parseDouble(in);
         int idR = serverCloud.reservarLeilao(valor,tipo,this.utilizador);
@@ -165,6 +250,10 @@ public class ServidorReader implements Runnable {
         return "LEILAOEMCURSO";
     }
 
+    /**
+     * Devolve uma lista com informação dos servidores disponíveis.
+     * @return List
+     */
     private List<String> apresentaCatalogo() {
         List<Servidor> rs = serverCloud.getServidoresAtivos();
         List<String> resultado = new ArrayList<>();

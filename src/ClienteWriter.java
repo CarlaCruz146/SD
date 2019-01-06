@@ -53,7 +53,7 @@ public class ClienteWriter implements Runnable{
                     consultarDivida();
                 if(op == 5)
                     reservarLeilao();
-                if(op == 5)
+                if(op == 6)
                     consultarCatalogo();
                 if(op == 0)
                     terminarSessao();

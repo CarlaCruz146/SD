@@ -95,7 +95,7 @@ public class ServidorReader implements Runnable {
             case "PEDIRGRANDELEILAO":
                 return reservarLeilao(p[1],"Grande");
             case "CATALOGO":
-                return this.consultarCatalogo().toString();
+                return this.apresentaCatalogo().toString();
             default:
                 return "ERRO";
         }
@@ -165,7 +165,7 @@ public class ServidorReader implements Runnable {
         return "LEILAOEMCURSO";
     }
 
-    private List<String> consultarCatalogo() {
+    private List<String> apresentaCatalogo() {
         List<Servidor> rs = serverCloud.getServidoresAtivos();
         List<String> resultado = new ArrayList<>();
         for (Servidor s : rs) {

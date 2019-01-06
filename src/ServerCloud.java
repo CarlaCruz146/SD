@@ -325,7 +325,6 @@ public class ServerCloud {
     public List<Servidor> getServidoresAtivos() {
         Servidor servidor=null;
         List<Servidor> r = new ArrayList<>();
-        servidorLock.lock();
         for (Servidor s : servidores.get("Pequeno"))
             if (s.getEstado() == 0) {
                 r.add(s);

@@ -70,10 +70,6 @@ public class ClienteReader implements Runnable{
                 menu.setOp(4);
                 menu.showMenu();
                 break;
-            case "CATALOGO":
-                menu.setOp(1);
-                menu.showMenu();
-                break;
             default:
                 System.out.println(comando);
                 menu.showMenu();

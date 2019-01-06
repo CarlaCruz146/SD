@@ -1,6 +1,10 @@
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Classe da thread ClienteWriter.
+ * @author Grupo 24
+ */
 public class ClienteWriter implements Runnable{
     private BufferedWriter out;
     private Socket socket;
@@ -39,7 +43,8 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Método para fazer o parser da opção indicada pelo utilizador.
+     * Método para fazer o parser da opção recebida.
+     *@param op Opção lida
      */
     private void parse(Integer op) throws IOException{
         switch (menu.getOp()) {
@@ -95,8 +100,8 @@ public class ClienteWriter implements Runnable{
         }
     }
 
-    /**
-     * Inicia sessão.
+     /**
+     * Lê os valores para iniciar sessão.
      * @throws IOException
      */
     private void iniciarSessao() throws IOException{
@@ -109,7 +114,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Regista utilizador.
+     * Lê os valores para registar um utilizador.
      * @throws IOException
      */
     private void registar() throws IOException{
@@ -122,7 +127,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Termina sessão.
+     * Envia para o servidor indicação para terminar sessão.
      * @throws IOException
      */
     private void terminarSessao() throws IOException {
@@ -132,7 +137,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Perdir servidor.
+     * Envia para o servidor indicação para pedir servidor.
      * @throws IOException
      */
     private void pedirServidor() throws IOException {
@@ -142,7 +147,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Cancelar Pedido.
+     * Envia para o servidor indicação para cancelar pedido.
      * @throws IOException
      */
     private void cancelarPedido() throws IOException {
@@ -152,7 +157,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Pedir Pequeno.
+     * Envia para o servidor indicação para pedir um servidor do tipo pequeno.
      * @throws IOException
      */
     private void pedirPequeno() throws IOException {
@@ -162,7 +167,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Pedido Grande.
+     * Envia para o servidor indicação para pedir um servidor do tipo grande.
      * @throws IOException
      */
     private void pedirGrande() throws IOException {
@@ -172,7 +177,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Cancelar Servidor.
+     * Envia para o servidor indicação para cancelar reserva.
      * @throws IOException
      */
     private void cancelarServidor() throws IOException{
@@ -184,7 +189,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Consultar Dívida.
+     * Envia para o servidor indicação para consultar a dívida do utilizador.
      * @throws IOException
      */
     private void consultarDivida() throws IOException{
@@ -194,7 +199,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Mostrar Reservas.
+     * Envia para o servidor indicação para mostrar as reservas ativas.
      * @throws IOException
      */
     private void mostraReservasA() throws IOException{
@@ -203,8 +208,8 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
-    /**
-     * Reservar Leilão.
+   /**
+     * Envia para o servidor indicação para fazer reserva a leilão.
      * @throws IOException
      */
     private void reservarLeilao() throws IOException{
@@ -214,7 +219,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Pedir pequeno a leilão.
+     * Envia para o servidor indicação para pedir um servidor do tipo pequeno em leilão.
      * @throws IOException
      */
     private void pedirPequenoLeilao() throws IOException {
@@ -226,7 +231,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Pedir grande a leilão.
+     * Envia para o servidor indicação para pedir um servidor do tipo grande em leilão.
      * @throws IOException
      */
     private void pedirGrandeLeilao() throws IOException {
@@ -238,7 +243,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Inserir Proposta.
+     * Lê valor da proposta para reservar a leilão.
      * @throws IOException
      */
     private void inserirProposta() throws IOException {
@@ -250,7 +255,7 @@ public class ClienteWriter implements Runnable{
     }
 
     /**
-     * Consultar Catalogo.
+     * Envia para o servidor indicação para consultar os servidores disponíveis.
      * @throws IOException
      */
     private void consultarCatalogo() throws IOException{

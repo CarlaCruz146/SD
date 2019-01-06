@@ -1,23 +1,34 @@
 import java.time.LocalDateTime;
-
+/**
+ * Classe das reservas.
+ * @author Grupo 24
+ */
 public class Reserva {
+    /** Id da reserva */
     private int id;
+    /** Nome do servidor reservado */
     private String nome;
+    /** Tipo do servidor reservado */
     private String tipo;
-    private int estado; //0 - inativa, 1 - ativa
+    /** Estado da reserva */
+    private int estado;
+    /** Email do utilizador que efetuou a reserva */
     private String email;
+    /** Preço da reserva */
     private double preco;
+    /** Data do ínicio da reserva */
     private LocalDateTime inicioReserva; // data e hora a que foi feita a reserva
+    /** Data de cancelamento da reserva */
     private LocalDateTime fimReserva; //data a que foi libertado
 
     /**
-     * Construtor da classe Reserva com paramêtros.
-     * @param id Id da reserva.
-     * @param nome Nome da reserva.
-     * @param tipo Tipo da reserva.
-     * @param estado Estado da reserva.
-     * @param email Email do Cliente.
-     * @param preco Preço da reserva.
+     * Construtor da classe Reserva com parâmetros.
+     * @param id Id da reserva
+     * @param nome Nome do servidor reservado
+     * @param tipo Tipo do servidor reservado
+     * @param estado Estado da reserva
+     * @param email Email do utilizador que fez a reserva
+     * @param preco Preço da reserva
      */
     public Reserva(int id, String nome, String tipo, int estado, String email, double preco){
         this.id = id;
@@ -39,7 +50,7 @@ public class Reserva {
     }
 
     /**
-     * Devolve o email da reserva.
+     * Devolve o email do utilizador que fez a reserva.
      * @return email
      */
     public String getEmail() {
@@ -47,7 +58,7 @@ public class Reserva {
     }
 
     /**
-     * Devolve o tipo da reserva.
+     * Devolve o tipo de servidor reservado.
      * @return tipo
      */
     public String getTipo() {
@@ -55,7 +66,7 @@ public class Reserva {
     }
 
     /**
-     * Devolve o nome da reserva.
+     * Devolve o nome do servidor reservado.
      * @return nome
      */
     public String getNome() {
@@ -72,90 +83,88 @@ public class Reserva {
 
     /**
      * Devolve o preço da reserva.
-     * @return preco
+     * @return preço
      */
     public double getPreco() {
         return preco;
     }
 
     /**
-     * Devolve o inicio da reserva.
-     * @return inicioReserva
+     * Devolve a data de ínicio da reserva.
+     * @return data
      */
     public LocalDateTime getInicioReserva(){
         return inicioReserva;
     }
 
     /**
-     * Devolve o fim da reserva.
-     * @return fimReserva
+     * Devolve a data de cancelamento da reserva.
+     * @return data
      */
     public LocalDateTime getFimReserva(){
         return fimReserva;
     }
 
     /**
-     * Altera o id da reserva.
-     * @param id Id da reserva
+     * Atualiza o id da reserva.
+     * @param id Novo id da reserva
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * Altera o email da reserva.
-     * @param email Email da reserva
+     * Atualiza o email do utilizador que efetuou a reserva.
+     * @param email Novo email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * Altera o nome da reserva.
-     * @param nome Nome da reserva
+     * Atualiza o nome do servidor reservado.
+     * @param nome Novo nome do servidor
      */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
     /**
-     * Altera o tipo da reserva.
-     * @param tipo Tipo da reserva
+     * Atualiza o tipo do servidor reservado.
+     * @param tipo Novo tipo de servidor
      */
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
     /**
-     * Altera o estado da reserva.
-     * @param estado Estado da reserva
+     * Atualiza o estado da reserva.
+     * @param estado Novo estado da reserva
      */
     public void setEstado(int estado) {
         this.estado = estado;
     }
 
     /**
-     * Altera o preço da reserva.
-     * @param preco Preço da reserva
+     * Atualiza o preço da reserva.
+     * @param preco Novo preço da reserva
      */
     public void setPreco(double preco) {
         this.preco = preco;
     }
 
     /**
-     * Altera o inicio da reserva.
-     * @param inicioReserva Inicio da reserva
+     * Atualiza a data de início da reserva.
+     * @param inicioReserva Nova data
      */
     public void setInicioReserva(LocalDateTime inicioReserva) {
         this.inicioReserva = inicioReserva;
     }
 
     /**
-     * Altera o fim da reserva.
-     * @param fimReserva Fim da reserva
+     * Atualiza a data de cancelamento da reserva.
      */
     public void setFimReserva(LocalDateTime fimReserva) {
         this.fimReserva = fimReserva;
     }
 }
-

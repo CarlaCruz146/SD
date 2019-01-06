@@ -1,6 +1,10 @@
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Classe main do Cliente.
+ * @author Grupo 24
+ */
 public class ClienteMain {
     /**
      * Método main.

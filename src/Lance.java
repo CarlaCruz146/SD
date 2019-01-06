@@ -1,12 +1,18 @@
+
+/**
+ * Classe dos lances de leilão.
+ * @author Grupo 24
+ */
 public class Lance {
+    /** Utilizador que fez o lance */
     private Utilizador comprador;
+    /** Valor do lance efetuado */
     private double valorVenc;
 
     /**
      * Construtor da classe Lance com paramêtros.
-     * @param comprador Comprador que faz o lance.
-     * @param valorVenc Valor do lance.
-
+     * @param comprador Comprador que faz o lance
+     * @param valorVenc Valor do lance
      */
     public Lance(Utilizador comprador, double valorVenc){
         this.comprador = comprador;
@@ -22,7 +28,7 @@ public class Lance {
     }
 
     /**
-     * Devolve o valor do lande.
+     * Devolve o valor do lance.
      * @return double
      */
     public double getValor() {
@@ -39,9 +45,9 @@ public class Lance {
 
     /**
      * Altera o comprador que fez o lance.
-     * @param vencedor Vencedor do lance
+     * @param comprador Vencedor do lance
      */
-    public void setComprador(String vencedor) {
+    public void setComprador(Utilizador comprador) {
         this.comprador = comprador;
     }
 

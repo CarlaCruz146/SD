@@ -41,7 +41,7 @@ public class ServidorReader implements Runnable {
     }
 
     /**
-     * Método para executar a thread ServidorWriter.
+     * Método para executar a thread ServidorReader.
      */
     public void run() {
         String r;

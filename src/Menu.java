@@ -1,15 +1,26 @@
 import java.util.Scanner;
 
+/**
+ * Classe dos menus.
+ * @author Grupo 24
+ */
 public class Menu {
-    // variáveis de instância
+     /** Opção atual do menu*/
     private int op;
+     /** Scanner */
     private Scanner in;
 
+    /**
+     * Construtor da classe Menu sem paramêtros.
+     */
     Menu() {
         in = new Scanner(System.in);
         this.op = 0;
     }
-    /** Apresentar o menu */
+    
+    /**
+     * Apresenta o menu.
+     */
     public void showMenu() {
         switch(op){
             case 0: System.out.println("************* MENU ****************\n"+
@@ -50,6 +61,7 @@ public class Menu {
 
     /**
      * Lê a opção selecionada do menu.
+     *@return opção
      */
     public int readOp() {
         int n;
@@ -65,7 +77,8 @@ public class Menu {
     }
 
     /**
-     * Lê uma mensagem
+     * Lê uma mensagem.
+     * @return mensagem lida
      */
     public String readString(String mensagem) {
         System.out.println(mensagem);
@@ -73,7 +86,8 @@ public class Menu {
     }
 
     /**
-     * Devolve a opção, verificando se esta é valida
+     * Devolve a opção inserida, verificando se esta é valida.
+     * @return opção
      */
     public Integer op() {
         int opcao = readOp();
@@ -88,7 +102,7 @@ public class Menu {
 
     /**
      * Devolve o valor da opção.
-     * @return int
+     * @return opção
      */
     public int getOp(){
         return this.op;
@@ -96,7 +110,7 @@ public class Menu {
 
     /**
      * Altera o valor da opção.
-     * @param n Valor da opção
+     * @param n Novo valor da opção
      */
     public void setOp(int n){
         this.op = n;

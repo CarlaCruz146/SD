@@ -3,9 +3,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+/**
+ * Classe da thread ClienteReader.
+ * @author Grupo 24
+ */
 public class ClienteReader implements Runnable{
+     /** BufferedReader */
     private BufferedReader in;
+    /** Socket */
     private Socket socket;
+    /** Menu do cliente */
     private Menu menu;
 
     /**
@@ -35,7 +42,8 @@ public class ClienteReader implements Runnable{
     }
 
     /**
-     * Método para fazer o parser da opção indicada pelo utilizador.
+     * Método para fazer o parser do comando recebido.
+     *@param comando Comando recebido
      */
     private synchronized void parse(String comando){
         String[] p = comando.split(" ",2);

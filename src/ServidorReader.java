@@ -171,7 +171,8 @@ public class ServidorReader implements Runnable {
         for (Servidor s : rs) {
             double preco = s.getPreco();
             String nome = s.getNome();
-            String r = String.join(" ", "Servidor",nome, "com preço de", Double.toString(preco) );
+            String tipo = s.getTipo();
+            String r = String.join(" ","Tipo->", tipo , "Servidor->", nome, "Preço:", Double.toString(preco) );
             resultado.add(r);
         }
         if(resultado.size() == 0) resultado.add("Não tem servidores ativos.");

@@ -18,15 +18,15 @@ public class Menu {
                     "* 0 - Sair                        *\n"+
                     "***********************************\n");
             break;
-            case 1: System.out.println("************* MENU ****************\n"+
-                    "* 1 - Reservar servidor a pedido    *\n"+
-                    "* 2 - Cancelar servidor             *\n"+
-                    "* 3 - Consultar reservas ativas     *\n"+
-                    "* 4 - Consultar dívida              *\n"+
-                    "* 5 - Reservar servidor em leilão   *\n"+
-                    "* 6 - Consultar catalogo            *\n"+
-                    "* 0 - Terminar Sessao               *\n"+
-                    "***********************************\n");
+            case 1: System.out.println("***************** MENU ******************\n"+
+                    "* 1 - Reservar servidor a pedido        *\n"+
+                    "* 2 - Cancelar servidor                 *\n"+
+                    "* 3 - Consultar reservas ativas         *\n"+
+                    "* 4 - Consultar dívida                  *\n"+
+                    "* 5 - Reservar servidor em leilão       *\n"+
+                    "* 6 - Catálogo de Sevidores Disponíveis *\n"+
+                    "* 0 - Terminar Sessao                   *\n"+
+                    "*****************************************\n");
             break;
             case 2: System.out.println("********* MENU RESERVA *************\n"+
                     "* 1 - Pequeno                     *\n"+

@@ -212,6 +212,7 @@ public class ServerCloud {
         return rs;
     }
 
+
     public void proposta(int idLeilao, Utilizador u, double preco) throws LicitacaoInvalidaException, LeilaoInexistenteException{
         Leilao l = getLeilao(idLeilao);
         l.proposta(u,preco);

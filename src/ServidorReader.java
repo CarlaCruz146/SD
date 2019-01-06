@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServidorReader implements Runnable {
@@ -81,7 +82,8 @@ public class ServidorReader implements Runnable {
             case "CANCELARSERVIDOR":
                 return this.cancelarServidor(p[1]);
             case "RESERVAS":
-                return this.apresentaReservas();
+              //  return this.apresentaReservas().toString();
+                return this.apresentaReservas().toString();
             case "DIVIDA":
                 return this.verDivida();
             case "LEILAO":
@@ -134,15 +136,16 @@ public class ServidorReader implements Runnable {
         return "RESERVACANCELADA";
     }
 
-    private String apresentaReservas() {
+    private List<String> apresentaReservas() {
         List<Reserva> rs = serverCloud.reservasAtivas(this.utilizador);
-        String resultado = "";
+        List<String> resultado = new ArrayList<>();
         for (Reserva re : rs) {
             int id = re.getId();
             String nomeS = re.getNome();
             String r = String.join(" ", "Reserva com ID", Integer.toString(id), "do Servidor", nomeS);
-            resultado = String.join(" RESERVA-> ", resultado, r);
+            resultado.add(r);
         }
+        if(resultado.size() == 0) resultado.add("Não tem reservas ativas.");
         return resultado;
     }
 

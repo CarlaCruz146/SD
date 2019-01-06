@@ -8,12 +8,21 @@ public class ClienteReader implements Runnable{
     private Socket socket;
     private Menu menu;
 
+    /**
+     * Construtor da classe ClienteReader com parâmetros.
+     * @param menu Menu de opções
+     * @param socket Socket
+     * @throws IOException
+     */
     public ClienteReader(Menu menu, Socket socket) throws IOException {
         this.socket = socket;
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.menu = menu;
     }
 
+    /**
+     * Método para executar a thread ClienteReader.
+     */
     public void run() {
         try {
             String comando;
@@ -25,6 +34,9 @@ public class ClienteReader implements Runnable{
         }
     }
 
+    /**
+     * Método para fazer o parser da opção indicada pelo utilizador.
+     */
     private synchronized void parse(String comando){
         String[] p = comando.split(" ",2);
         switch(p[0].toUpperCase()){

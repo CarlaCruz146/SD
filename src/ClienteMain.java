@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClienteMain {
+    /**
+     * Método main.
+     * @throws IOException
+     */
     public static void main(String[] args) {
         Socket socket = null;
         try {

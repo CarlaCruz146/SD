@@ -6,6 +6,12 @@ public class ClienteWriter implements Runnable{
     private Socket socket;
     private Menu menu;
 
+    /**
+     * Construtor da classe ClienteWriter com parâmetros.
+     * @param menu Menu de opções
+     * @param socket Socket
+     * @throws IOException
+     */
     public ClienteWriter(Menu menu, Socket socket){
         try{
             this.socket = socket;
@@ -17,6 +23,9 @@ public class ClienteWriter implements Runnable{
         }
     }
 
+    /**
+     * Método para executar a thread ClienteWriter.
+     */
     public void run() {
         int op;
         menu.showMenu();
@@ -29,6 +38,9 @@ public class ClienteWriter implements Runnable{
         }
     }
 
+    /**
+     * Método para fazer o parser da opção indicada pelo utilizador.
+     */
     private void parse(Integer op) throws IOException{
         switch (menu.getOp()) {
             case 0:
@@ -83,6 +95,10 @@ public class ClienteWriter implements Runnable{
         }
     }
 
+    /**
+     * Inicia sessão.
+     * @throws IOException
+     */
     private void iniciarSessao() throws IOException{
         String email = menu.readString("Email: ");
         String password = menu.readString("Password: ");
@@ -92,6 +108,10 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Regista utilizador.
+     * @throws IOException
+     */
     private void registar() throws IOException{
         String email = menu.readString("Email: ");
         String password = menu.readString("Password: ");
@@ -101,36 +121,60 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Termina sessão.
+     * @throws IOException
+     */
     private void terminarSessao() throws IOException {
         out.write("TERMINARSESSAO");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Perdir servidor.
+     * @throws IOException
+     */
     private void pedirServidor() throws IOException {
         out.write("PEDIR");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Cancelar Pedido.
+     * @throws IOException
+     */
     private void cancelarPedido() throws IOException {
         out.write("CANCELARPEDIDO");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Pedir Pequeno.
+     * @throws IOException
+     */
     private void pedirPequeno() throws IOException {
         out.write("PEDIRPEQUENO");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Pedido Grande.
+     * @throws IOException
+     */
     private void pedirGrande() throws IOException {
         out.write("PEDIRGRANDE");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Cancelar Servidor.
+     * @throws IOException
+     */
     private void cancelarServidor() throws IOException{
         String id = menu.readString("Identificador: ");
         String q = String.join(" ", "CANCELARSERVIDOR", id);
@@ -139,24 +183,40 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Consultar Dívida.
+     * @throws IOException
+     */
     private void consultarDivida() throws IOException{
         out.write("DIVIDA");
         out.newLine();
         out.flush();
     }
-    
+
+    /**
+     * Mostrar Reservas.
+     * @throws IOException
+     */
     private void mostraReservasA() throws IOException{
         out.write("RESERVAS");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Reservar Leilão.
+     * @throws IOException
+     */
     private void reservarLeilao() throws IOException{
         out.write("LEILAO");
         out.newLine();
         out.flush();
     }
 
+    /**
+     * Pedir pequeno a leilão.
+     * @throws IOException
+     */
     private void pedirPequenoLeilao() throws IOException {
         String valor = menu.readString("Valor: ");
         String q = String.join(" ", "PEDIRPEQUENOLEILAO", valor);
@@ -165,6 +225,10 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Pedir grande a leilão.
+     * @throws IOException
+     */
     private void pedirGrandeLeilao() throws IOException {
         String valor = menu.readString("Valor: ");
         String q = String.join(" ", "PEDIRGRANDELEILAO", valor);
@@ -173,6 +237,10 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Inserir Proposta.
+     * @throws IOException
+     */
     private void inserirProposta() throws IOException {
         String valor = menu.readString("Proposta: ");
         String q = String.join(" ", "PROPOSTA", valor);
@@ -181,6 +249,10 @@ public class ClienteWriter implements Runnable{
         out.flush();
     }
 
+    /**
+     * Consultar Catalogo.
+     * @throws IOException
+     */
     private void consultarCatalogo() throws IOException{
         out.write("CATALOGO");
         out.newLine();

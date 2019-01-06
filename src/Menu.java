@@ -48,6 +48,9 @@ public class Menu {
         }System.out.println("Escolha uma opção");
     }
 
+    /**
+     * Lê a opção selecionada do menu.
+     */
     public int readOp() {
         int n;
 
@@ -61,11 +64,17 @@ public class Menu {
         return n;
     }
 
+    /**
+     * Lê uma mensagem
+     */
     public String readString(String mensagem) {
         System.out.println(mensagem);
         return in.nextLine();
     }
 
+    /**
+     * Devolve a opção, verificando se esta é valida
+     */
     public Integer op() {
         int opcao = readOp();
         if (op == 0) {
@@ -77,10 +86,18 @@ public class Menu {
         return opcao;
     }
 
+    /**
+     * Devolve o valor da opção.
+     * @return int
+     */
     public int getOp(){
         return this.op;
     }
 
+    /**
+     * Altera o valor da opção.
+     * @param n Valor da opção
+     */
     public void setOp(int n){
         this.op = n;
     }

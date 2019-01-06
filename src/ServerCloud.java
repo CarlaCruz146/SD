@@ -1,10 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,12 +9,13 @@ public class ServerCloud {
     private Map<String, Utilizador> utilizadores;
     private Map<String, List<Servidor>> servidores;
     private Map<Integer, Reserva> reservas;
-    private Map<Integer,Leilao> leiloes;
+    private Map<Integer, Leilao> leiloes;
     private Lock utilizadorLock;
     private Lock servidorLock;
     private Lock reservaLock;
     private Lock leilaoLock;
     private Condition conditionS;
+
     //ver se e lockleilao ou servidorlock
     public ServerCloud() {
         this.reservaLock = new ReentrantLock();
@@ -81,15 +78,14 @@ public class ServerCloud {
         try {
             List<Servidor> servidores = this.servidores.get(tipo);
             for (Servidor s : servidores)
-                if (s.getEstado() == 0){
+                if (s.getEstado() == 0) {
                     servidor = s;
                     servidor.setEstado(1);
                     break;
-                }
-                else if (s.getEstado() == 2){
+                } else if (s.getEstado() == 2) {
                     servidor = s;
                 }
-            if(servidor!=null && servidor.getEstado()==2){
+            if (servidor != null && servidor.getEstado() == 2) {
                 servidor.setEstado(1);
                 this.cancelaServidorEmLeilao(servidor);
 
@@ -104,10 +100,10 @@ public class ServerCloud {
         for (Reserva r : this.reservas.values())
             if (r.getTipo().equals(s.getTipo()) && r.getNome().equals(s.getNome())) {
                 utilizadorLock.lock();
-                try{
+                try {
                     Utilizador u = this.utilizadores.get(r.getEmail());
                     u.notificar("A reserva com ID " + r.getId() + " foi cancelada.");
-                }finally {
+                } finally {
                     utilizadorLock.unlock();
                 }
                 r.setEstado(0);
@@ -146,10 +142,10 @@ public class ServerCloud {
     public void cancelarServidor(int id, Utilizador u) throws ReservaInexistenteException, LeilaoInexistenteException {
         reservaLock.lock();
         try {
-            if (!this.reservas.containsKey(id)){
+            if (!this.reservas.containsKey(id)) {
                 System.out.println(this.reservas.containsKey(id));
-                throw new ReservaInexistenteException("Reserva inexistente");}
-            else {
+                throw new ReservaInexistenteException("Reserva inexistente");
+            } else {
                 Reserva r = this.reservas.get(id);
                 if (!r.getEmail().equals(u.getEmail()))
                     throw new ReservaInexistenteException("Reserva inexistente");
@@ -191,13 +187,13 @@ public class ServerCloud {
         else fim = LocalDateTime.now();
 
         long horas = ChronoUnit.HOURS.between(inicio, fim);
-        long minutos = ChronoUnit.MINUTES.between(inicio,fim);
+        long minutos = ChronoUnit.MINUTES.between(inicio, fim);
         /* para testar
         long tempo = ChronoUnit.MINUTES.between(inicio,fim);
         System.out.println(tempo + " minutos");*/
-        if(minutos % 60 == 0)
+        if (minutos % 60 == 0)
             res += horas * r.getPreco();
-        else  res += (horas+1)*r.getPreco();
+        else res += (horas + 1) * r.getPreco();
         return res;
     }
 
@@ -213,44 +209,45 @@ public class ServerCloud {
     }
 
 
-    public void proposta(int idLeilao, Utilizador u, double preco) throws LicitacaoInvalidaException, LeilaoInexistenteException{
+    public void proposta(int idLeilao, Utilizador u, double preco) throws LicitacaoInvalidaException, LeilaoInexistenteException {
         Leilao l = getLeilao(idLeilao);
-        l.proposta(u,preco);
+        l.proposta(u, preco);
     }
 
-    private Leilao getLeilao(int idLeilao) throws LeilaoInexistenteException{
+    private Leilao getLeilao(int idLeilao) throws LeilaoInexistenteException {
         Leilao l;
         leilaoLock.lock();
-        try{
+        try {
             l = leiloes.get(idLeilao);
-            if(l==null) throw new LeilaoInexistenteException("Leilão inexistente");
+            if (l == null) throw new LeilaoInexistenteException("Leilão inexistente");
         } finally {
             leilaoLock.unlock();
         }
         return l;
     }
 
-    public int iniciaLeilao(String tipo){
+    public int iniciaLeilao(String tipo) {
         int idLeilao;
         leilaoLock.lock();
-        try{
+        try {
             idLeilao = leiloes.size();
-            Leilao l = new Leilao(idLeilao,tipo);
-            leiloes.put(idLeilao,l);
+            Leilao l = new Leilao(idLeilao, tipo);
+            leiloes.put(idLeilao, l);
         } finally {
             leilaoLock.unlock();
         }
         return idLeilao;
     }
-    public void encerraLeilao(String tipo,Servidor s) throws LeilaoInexistenteException{
+
+    public void encerraLeilao(String tipo, Servidor s) throws LeilaoInexistenteException {
         int idLeilao = -1;
         Lance lance;
-        for(Leilao l : this.leiloes.values())
-            if(l.getTipo().equals(tipo)){
+        for (Leilao l : this.leiloes.values())
+            if (l.getTipo().equals(tipo)) {
                 idLeilao = l.getId();
                 break;
             }
-        if(idLeilao != -1) {
+        if (idLeilao != -1) {
             lance = vencedorLeilao(idLeilao);
             reservaLock.lock();
             try {
@@ -267,10 +264,11 @@ public class ServerCloud {
         }
 
     }
-    public Lance vencedorLeilao(int idLeilao) throws LeilaoInexistenteException{
+
+    public Lance vencedorLeilao(int idLeilao) throws LeilaoInexistenteException {
         Leilao l;
         leilaoLock.lock();
-        try{
+        try {
             l = getLeilao(idLeilao);
             leiloes.remove(idLeilao);
         } finally {
@@ -297,10 +295,10 @@ public class ServerCloud {
         return servidor;
     }
 
-    public int reservarLeilao(double valor, String tipo, Utilizador u) throws InterruptedException,LicitacaoInvalidaException, LeilaoInexistenteException{
+    public int reservarLeilao(double valor, String tipo, Utilizador u) throws InterruptedException, LicitacaoInvalidaException, LeilaoInexistenteException {
         Servidor s;
         int idR = -1;
-        if((s = verificaDisponibilidadeLeilao(tipo))!=null){
+        if ((s = verificaDisponibilidadeLeilao(tipo)) != null) {
             reservaLock.lock();
             try {
                 idR = reservas.size();
@@ -309,20 +307,34 @@ public class ServerCloud {
             } finally {
                 reservaLock.unlock();
             }
-        }
-        else {
+        } else {
             int idLeilao = -1;
-            for(Leilao l: this.leiloes.values())
-                if(l.getTipo().equals(tipo)){
+            for (Leilao l : this.leiloes.values())
+                if (l.getTipo().equals(tipo)) {
                     idLeilao = l.getId();
                     break;
                 }
-            if(idLeilao==-1) {
+            if (idLeilao == -1) {
                 idLeilao = this.iniciaLeilao(tipo);
             }
-            this.proposta(idLeilao,u,valor);
+            this.proposta(idLeilao, u, valor);
         }
         return idR;
+    }
+
+    public List<Servidor> getServidoresAtivos() {
+        Servidor servidor=null;
+        List<Servidor> r = new ArrayList<>();
+        servidorLock.lock();
+        for (Servidor s : servidores.get("Pequeno"))
+            if (s.getEstado() == 0) {
+                r.add(s);
+            }
+        for (Servidor s : servidores.get("Grande"))
+            if (s.getEstado() == 0) {
+                r.add(s);
+            }
+        return r;
     }
     /*
     //busca um servidor do tipo dado e adiciona proposta do utilizador

@@ -53,6 +53,8 @@ public class ClienteWriter implements Runnable{
                     consultarDivida();
                 if(op == 5)
                     reservarLeilao();
+                if(op == 5)
+                    consultarCatalogo();
                 if(op == 0)
                     terminarSessao();
                break;
@@ -175,6 +177,12 @@ public class ClienteWriter implements Runnable{
         String valor = menu.readString("Proposta: ");
         String q = String.join(" ", "PROPOSTA", valor);
         out.write(q);
+        out.newLine();
+        out.flush();
+    }
+
+    private void consultarCatalogo() throws IOException{
+        out.write("CATALOGO");
         out.newLine();
         out.flush();
     }

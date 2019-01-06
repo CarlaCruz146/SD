@@ -24,6 +24,7 @@ public class Menu {
                     "* 3 - Consultar reservas ativas     *\n"+
                     "* 4 - Consultar dívida              *\n"+
                     "* 5 - Reservar servidor em leilão   *\n"+
+                    "* 6 - Consultar catalogo            *\n"+
                     "* 0 - Terminar Sessao               *\n"+
                     "***********************************\n");
             break;

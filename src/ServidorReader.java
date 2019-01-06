@@ -4,7 +4,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServidorReader implements Runnable {
     private Utilizador utilizador;
@@ -92,6 +94,8 @@ public class ServidorReader implements Runnable {
                 return reservarLeilao(p[1],"Pequeno");
             case "PEDIRGRANDELEILAO":
                 return reservarLeilao(p[1],"Grande");
+            case "CATALOGO":
+                return this.consultarCatalogo().toString();
             default:
                 return "ERRO";
         }
@@ -159,6 +163,19 @@ public class ServidorReader implements Runnable {
         int idR = serverCloud.reservarLeilao(valor,tipo,this.utilizador);
         if(idR!=-1) return String.join(" ", "IDENTIFICADOR", Integer.toString(idR));
         return "LEILAOEMCURSO";
+    }
+
+    private List<String> consultarCatalogo() {
+        List<Servidor> rs = serverCloud.getServidoresAtivos();
+        List<String> resultado = new ArrayList<>();
+        for (Servidor s : rs) {
+            double preco = s.getPreco();
+            String nome = s.getNome();
+            String r = String.join(" ", "Servidor",nome, "com preço de", Double.toString(preco) );
+            resultado.add(r);
+        }
+        if(resultado.size() == 0) resultado.add("Não tem servidores ativos.");
+        return resultado;
     }
 }
 

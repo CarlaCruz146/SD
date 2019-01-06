@@ -31,6 +31,9 @@ public class Leilao {
     }
 
     synchronized public Lance terminaLeilao(){
+        String vencedor = bestLance.getComprador().getEmail();
+        for(Utilizador u: this.compradores)
+            u.notificar("Leilão encerrado! Vencedor: " + vencedor);
         return bestLance;
     }
 }

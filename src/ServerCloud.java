@@ -257,7 +257,6 @@ public class ServerCloud {
                 Utilizador u = lance.getComprador();
                 Reserva r = new Reserva(idR, s.getNome(), tipo, 1, u.getEmail(), lance.getValor());
                 this.reservas.put(idR, r);
-                u.notificar("Vencedor do leilão! IDENTIFICADOR " + idR);
             } finally {
                 reservaLock.unlock();
             }
@@ -323,7 +322,6 @@ public class ServerCloud {
     }
 
     public List<Servidor> getServidoresAtivos() {
-        Servidor servidor=null;
         List<Servidor> r = new ArrayList<>();
         for (Servidor s : servidores.get("Pequeno"))
             if (s.getEstado() == 0) {
@@ -335,51 +333,4 @@ public class ServerCloud {
             }
         return r;
     }
-    /*
-    //busca um servidor do tipo dado e adiciona proposta do utilizador
-    public Servidor escolherServidor(double valor, String tipo, Utilizador u) throws ServidorInexistenteException, InterruptedException {
-        Servidor r = null;
-        List<Servidor> servidores;
-        servidorLock.lock();
-        Leilao l = new Leilao();
-        try {
-            while ((r = verificaDisponibilidadeLeilao(tipo)) == null) {
-                if (l.getValor() < valor) {
-                    l.setTipo(tipo);
-                    l.setVencedor(u.getEmail());
-                    l.setValor(valor);
-                }
-                conditionS.await();
-            }
-                servidores = this.servidores.get(tipo);
-                for (Servidor s : servidores)
-                    if (s.getEstado() == 0) {
-                        s.setLeilao(l);
-                        return s;
-                    }
-            }
-         finally {
-            servidorLock.unlock();
-        }
-
-        return r;
-    }
-
-    public Reserva atribuiReservaLeilao(Servidor s) {
-        //busca o vencedor
-        String cliente = vencedorLeilao(s.getLeilao());
-        String nomeS = s.getNome();
-        int idR;
-        Reserva r = null;
-        reservaLock.lock();
-        try {
-            idR = reservas.size();
-            r = new Reserva(idR, nomeS, s.getTipo(), 1, cliente, s.getLeilao().getValor()); // cria a reserva
-            this.reservas.put(idR, r);
-        } finally {
-            reservaLock.unlock();
-        }
-        s.setEstado(2);
-        return r;
-    }*/
 }

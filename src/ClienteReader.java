@@ -54,10 +54,8 @@ public class ClienteReader implements Runnable{
                 menu.showMenu();
                 break;
             case "RESERVACANCELADA":
-                if(menu.getOp()!=1) {
-                    menu.setOp(1);
-                    menu.showMenu();
-                }
+                menu.setOp(1);
+                menu.showMenu();
                 break;
             case "PEDIDOLEILAO":
                 menu.setOp(3);

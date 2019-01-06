@@ -98,7 +98,7 @@ public class ServerCloud {
 
     public void cancelaServidorEmLeilao(Servidor s) {
         for (Reserva r : this.reservas.values())
-            if (r.getTipo().equals(s.getTipo()) && r.getNome().equals(s.getNome())) {
+            if (r.getTipo().equals(s.getTipo()) && r.getNome().equals(s.getNome()) && r.getEstado()==1) {
                 utilizadorLock.lock();
                 try {
                     Utilizador u = this.utilizadores.get(r.getEmail());
@@ -106,15 +106,14 @@ public class ServerCloud {
                 } finally {
                     utilizadorLock.unlock();
                 }
-                r.setEstado(0);
-                r.setFimReserva(LocalDateTime.now());
                 reservaLock.lock();
                 try {
+                    r.setEstado(0);
+                    r.setFimReserva(LocalDateTime.now());
                     this.reservas.put(r.getId(), r);
                 } finally {
                     reservaLock.unlock();
                 }
-                r.setFimReserva(LocalDateTime.now());
                 break;
             }
     }
@@ -188,9 +187,6 @@ public class ServerCloud {
 
         long horas = ChronoUnit.HOURS.between(inicio, fim);
         long minutos = ChronoUnit.MINUTES.between(inicio, fim);
-        /* para testar
-        long tempo = ChronoUnit.MINUTES.between(inicio,fim);
-        System.out.println(tempo + " minutos");*/
         if (minutos % 60 == 0)
             res += horas * r.getPreco();
         else res += (horas + 1) * r.getPreco();

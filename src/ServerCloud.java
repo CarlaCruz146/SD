@@ -149,6 +149,7 @@ public class ServerCloud {
                 if (!r.getEmail().equals(u.getEmail()))
                     throw new ReservaInexistenteException("Reserva inexistente");
                 r.setEstado(0);
+                r.setFimReserva(LocalDateTime.now());
                 servidorLock.lock();
                 try {
                     List<Servidor> serv = this.servidores.get(r.getTipo());

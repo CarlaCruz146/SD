@@ -250,7 +250,7 @@ public class ServerCloud {
             try {
                 int idR;
                 idR = reservas.size();
-                s.setEstado(1); //Ver se é preciso lock!
+                s.setEstado(2); 
                 Utilizador u = lance.getComprador();
                 Reserva r = new Reserva(idR, s.getNome(), tipo, 1, u.getEmail(), lance.getValor());
                 this.reservas.put(idR, r);
